@@ -92,7 +92,7 @@ class Check
           manifest  = require(manifest)
           manifest?.forEach (item) ->
             ids?.forEach (id) ->
-              item.status = 'completed' if item.id is id
+              item.status = 'completed' if item.id is parseInt(id)
             arr.push item
           mixin.write 'green', "\nUpdating status : done"
           callback null, arr
@@ -109,7 +109,10 @@ class Check
             callback err, manifest
 
       ], (err, result) ->
+        manifest  = result
+        completed = _.filter(manifest, { 'status': 'completed'})
         mixin.write 'green', '\nChecking videos : done'
+        mixin.write 'magenta', "\nDownloaded Videos : #{completed?.length} of #{manifest?.length}"
         callback err, result
 
 
