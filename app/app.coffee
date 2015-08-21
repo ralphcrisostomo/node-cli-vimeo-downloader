@@ -2,8 +2,10 @@
 
 async       = require('async')
 commander   = require('commander')
+path        = require('path')
+rootPath    = path.normalize(__dirname + '/..')
 dotenv      = require('dotenv')
-dotenv.config({path:"./env/#{process.env.NODE_ENV}"})
+dotenv.config({path:"#{rootPath}/env/#{process.env.NODE_ENV}"})
 Check       = require('./modules/check')
 
 
