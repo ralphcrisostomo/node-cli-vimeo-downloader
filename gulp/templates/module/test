@@ -1,6 +1,6 @@
 'use strict'
 
-Module = require('../../app/modules/<%= name.capitalize() %>')
+Module = require('../../../app/modules/<%= name.capitalize() %>')
 
 describe 'Module `<%= name.capitalize() %>`', ->
 

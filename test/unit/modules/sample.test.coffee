@@ -1,6 +1,6 @@
 'use strict'
 
-Module = require('../../app/modules/Sample')
+Module = require('../../../app/modules/Sample')
 
 describe 'Module `Sample`', ->
 
