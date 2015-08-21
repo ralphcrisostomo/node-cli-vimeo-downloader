@@ -1,0 +1,1 @@
+"use strict";var App;App=function(){function o(){console.log("hello world")}return o}(),module.exports=new App;
