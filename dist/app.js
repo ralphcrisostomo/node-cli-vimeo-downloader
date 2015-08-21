@@ -1,1 +1,1 @@
-"use strict";var App;App=function(){function o(){console.log("hello world")}return o}(),module.exports=new App;
+"use strict";var App,Check,async,commander,dotenv;async=require("async"),commander=require("commander"),dotenv=require("dotenv"),dotenv.config({path:"./env/"+process.env.NODE_ENV}),Check=require("./modules/check"),App=function(){function e(e){var n;n=new Check,async.series([n.run(e)],function(e,n){})}return e}(),module.exports=App;

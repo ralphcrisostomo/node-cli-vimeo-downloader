@@ -55,6 +55,7 @@ gulp.task 'test:unit', ['coffeelint'], ->
     reporter    : 'nyan'
     ignoreLeaks : false
     require     : [
+      "#{rootPath}/test/helpers/init.coffee"
       "#{rootPath}/test/helpers/global.coffee"
     ]
   .once('end', -> process.exit())
@@ -67,6 +68,7 @@ gulp.task 'test:integration', ['coffeelint'], ->
     reporter    : 'nyan'
     ignoreLeaks : false
     require     : [
+      "#{rootPath}/test/helpers/init.coffee"
       "#{rootPath}/test/helpers/global.coffee"
     ]
   .once('end', -> process.exit())

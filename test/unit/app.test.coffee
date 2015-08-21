@@ -5,7 +5,8 @@ Module = require('../../app/app')
 describe 'App', ->
 
   beforeEach ->
-    @module = new Module()
+    name = name = 'test/sandbox/sample'
+    @module = new Module(name)
 
   afterEach ->
     @module = null

@@ -1,0 +1,3 @@
+VIMEO_CONTENT_TYPE=application/json
+VIMEO_AUTHORIZATION=bearer 17e72db60b900c416635d38d218ee460
+VIMEO_HOST=api.vimeo.com
