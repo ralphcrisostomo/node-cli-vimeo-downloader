@@ -1,8 +1,9 @@
 'use strict'
 
-request = require('superagent')
-chalk   = require('chalk')
-fs      = require('fs')
+request   = require('superagent')
+fs        = require('fs')
+mixin     = require('./mixin')
+
 
 class Manifest
 
@@ -22,13 +23,13 @@ class Manifest
           name    : item?.name
           status  : 'created'
 
-      process.stdout.write chalk.cyan "\nDownloading manifest... #{@manifest.length} of #{result.body.total}\r"
+      mixin.write 'cyan', "\nDownloading manifest... #{@manifest.length} of #{result.body.total}\r"
       return @_downloadManifest(name, page + 1, callback) if @manifest.length isnt result.body.total
-      process.stdout.write chalk.green "\nDownloading manifest : done"
-      process.stdout.write chalk.blue "\nWriting `manifest.json`..."
+      mixin.write 'green', "\nDownloading manifest : done"
+      mixin.write 'blue', "\nWriting `manifest.json`..."
       file = "#{process.cwd()}/#{name}/manifest.json"
       fs.writeFile file, JSON.stringify(@manifest, null, 4), (err) =>
-        process.stdout.write chalk.green "\nWriting `manifest.json` : done"
+        mixin.write 'green', "\nWriting `manifest.json` : done"
         callback err, @manifest
 
   constructor : ->
@@ -36,7 +37,7 @@ class Manifest
 
   create : (name) ->
     (callback) =>
-      process.stdout.write chalk.blue "\nCreating `manifest.json`..."
+      mixin.write 'blue', "\nCreating `manifest.json`..."
       @_downloadManifest(name, 1, callback)
 
 

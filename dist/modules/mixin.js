@@ -1,0 +1,1 @@
+"use strict";var chalk,mixin;chalk=require("chalk"),mixin={write:function(e,i){return null==e&&(e="blue"),"test"===process.env.NODE_ENV?!1:process.stdout.write(chalk[e](i))}},module.exports=mixin;
