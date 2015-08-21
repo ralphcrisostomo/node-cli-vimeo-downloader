@@ -4,9 +4,7 @@ request   = require('superagent')
 fs        = require('fs')
 mixin     = require('./mixin')
 
-
 class Manifest
-
   _downloadManifest : (name, page, callback) ->
     per_page  = 50
     request

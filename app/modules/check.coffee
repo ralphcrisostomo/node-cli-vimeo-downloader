@@ -54,7 +54,7 @@ class Check
       # Create manifest
       #
       if not fs.existsSync("#{directory}/manifest.json")
-        mixin.write 'red', '\nManifest do not exist.'
+        mixin.write 'red', '\n`manifest.json` do not exist.'
         manifest = new Manifest()
         manifest.create(name, 1) callback
 
@@ -88,11 +88,13 @@ class Check
           mixin.write 'blue', "\nUpdating status..."
           arr       = []
           ids       = input
+
           manifest  = "#{process.cwd()}/#{name}/manifest.json"
           manifest  = require(manifest)
           manifest?.forEach (item) ->
+            item.status = 'created'
             ids?.forEach (id) ->
-              item.status = 'completed' if item.id is parseInt(id)
+              item.status = 'completed' if parseInt(item.id) is parseInt(id)
             arr.push item
           mixin.write 'green', "\nUpdating status : done"
           callback null, arr
@@ -112,7 +114,7 @@ class Check
         manifest  = result
         completed = _.filter(manifest, { 'status': 'completed'})
         mixin.write 'green', '\nChecking videos : done'
-        mixin.write 'magenta', "\nDownloaded Videos : #{completed?.length} of #{manifest?.length}"
+        mixin.write 'magenta', "\n\nDownloaded Videos : #{completed?.length} of #{manifest?.length}\n"
         callback err, result
 
 
