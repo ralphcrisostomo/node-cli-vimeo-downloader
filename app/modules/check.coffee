@@ -1,5 +1,6 @@
 'use strict'
 
+_         = require('lodash')
 async     = require('async')
 fs        = require('fs')
 path      = require('path')
@@ -9,9 +10,9 @@ mixin     = require('./mixin')
 
 # Psuedocode
 # ------------------------------
-# - Detect directory
-# - Detect manifest
-# - Detect videos
+# - Check directory
+# - Check manifest
+# - Check videos
 
 class Check
 
@@ -44,6 +45,7 @@ class Check
         mixin.write 'green', "\nChecking directory : done"
         callback null, {}
 
+
   _checkManifest : (name) ->
     (callback) ->
       mixin.write 'blue', '\nChecking `manifest.json`...'
@@ -61,12 +63,54 @@ class Check
         callback null, {}
 
 
-  _checkVideos : ->
+  _checkVideos : (name) ->
     (callback) ->
-      # Update status when video exist and match id
       mixin.write 'blue', '\nChecking videos...'
-      mixin.write 'green', '\nChecking videos : done'
-      callback null, {}
+      async.waterfall [
+        #
+        # Get video ids
+        #
+        (callback) ->
+          mixin.write 'blue', "\nGetting video ids..."
+          ids         = []
+          directory   = "#{process.cwd()}/#{name}"
+          fs.readdir directory, (err, files) ->
+            mixin.write 'green', "\nGetting video ids : done"
+            files.forEach (item) ->
+              matched = item?.match(/(\d+)/g)
+              ids     = _.union ids, matched
+            callback err, ids
+      ,
+        #
+        # Update status
+        #
+        (input, callback) ->
+          mixin.write 'blue', "\nUpdating status..."
+          arr       = []
+          ids       = input
+          manifest  = "#{process.cwd()}/#{name}/manifest.json"
+          manifest  = require(manifest)
+          manifest?.forEach (item) ->
+            ids?.forEach (id) ->
+              item.status = 'completed' if item.id is id
+            arr.push item
+          mixin.write 'green', "\nUpdating status : done"
+          callback null, arr
+      ,
+        #
+        # Update `manifest.json`
+        #
+        (input, callback) ->
+          mixin.write 'blue', "\nUpdating `manifest.json`..."
+          manifest  = input
+          file      = "#{process.cwd()}/#{name}/manifest.json"
+          fs.writeFile file, JSON.stringify(manifest, null, 4), (err) ->
+            mixin.write 'green', "\nUpdating `manifest.json` : done"
+            callback err, manifest
+
+      ], (err, result) ->
+        mixin.write 'green', '\nChecking videos : done'
+        callback err, result
 
 
 
