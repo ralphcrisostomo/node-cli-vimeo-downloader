@@ -94,7 +94,7 @@ class Check
           manifest?.forEach (item) ->
             item.status = 'created'
             ids?.forEach (id) ->
-              item.status = 'completed' if parseInt(item.id) is parseInt(id)
+              item.status = 'completed' if item.id is parseInt(id)
             arr.push item
           mixin.write 'green', "\nUpdating status : done"
           callback null, arr

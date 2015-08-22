@@ -4,7 +4,9 @@ request   = require('superagent')
 fs        = require('fs')
 mixin     = require('./mixin')
 
+
 class Manifest
+
   _downloadManifest : (name, page, callback) ->
     per_page  = 50
     request
@@ -23,6 +25,7 @@ class Manifest
 
       mixin.write 'cyan', "\nDownloading manifest... #{@manifest.length} of #{result.body.total}\r"
       return @_downloadManifest(name, page + 1, callback) if @manifest.length isnt result.body.total
+      mixin.write 'cyan', "\n------------------\n"
       mixin.write 'green', "\nDownloading manifest : done"
       mixin.write 'blue', "\nWriting `manifest.json`..."
       file = "#{process.cwd()}/#{name}/manifest.json"
@@ -36,7 +39,9 @@ class Manifest
   create : (name) ->
     (callback) =>
       mixin.write 'blue', "\nCreating `manifest.json`..."
+      mixin.write 'cyan', "\n\n------------------"
       @_downloadManifest(name, 1, callback)
+
 
 
 
