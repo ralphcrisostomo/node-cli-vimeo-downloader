@@ -1,3 +1,11 @@
+## To Use
+Currently on development.
+For now just clone this repo and do an `npm link` inside this directory.
+Do `vimeo <username>` to download all of its video
+
+
+
+
 ## Clone
 ```bash
 
@@ -6,7 +14,7 @@
 ```
 
 
-## Gulp Commands
+## Development Gulp Commands
 
 ```bash
 
