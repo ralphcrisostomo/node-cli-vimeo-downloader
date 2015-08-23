@@ -78,12 +78,12 @@ class Download
       object  = input
       files   = object?.request?.files
       video   = object?.video
-      url     = files?.h264?.hd?.url
+      url     = files?.h264?.hd?.url or files?.h264?.sd?.url
       mixin.write 'cyan', "\nUrl \t\t: #{url}"
       request
         .get(url)
         .parse (res) =>
-          file  = fs.createWriteStream("#{process.cwd()}/#{name}/_#{video.title} [#{video.id}].mp4");
+          file  = fs.createWriteStream("#{process.cwd()}/#{name}/#{video.title} [#{video.id}].mp4");
           params        =
             complete    : '='
             incomplete  : ' '
