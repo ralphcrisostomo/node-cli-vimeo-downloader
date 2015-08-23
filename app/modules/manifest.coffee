@@ -47,4 +47,6 @@ class Manifest
 
 
 
+
+
 module.exports = Manifest

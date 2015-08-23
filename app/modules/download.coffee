@@ -29,6 +29,7 @@ class Download
         else if err is 'continue'
           @run(name) callback
         else
+          @retry = 0
           callback err, result
 
   _getId : (name) ->
@@ -60,12 +61,15 @@ class Download
           mixin.write 'cyan', '\nStatus \t\t: Failed'
           callback 'retry', null
         else
-          @retry = 0
           callback null, result?.text
 
   _getRequestFiles :  ->
     (input, callback) ->
       html        = input
+      #
+      # TODO - variable `t` will always change!
+      # TODO - every time they do a build
+      #
       regex_a     = /t={(.*)};if/
       regex_b     = /{(.*)}/
       string      = html?.match(regex_a)
@@ -74,7 +78,7 @@ class Download
       callback null, object
 
   _downloadVideo : (name) ->
-    (input, callback) ->
+    (input, callback) =>
       object  = input
       files   = object?.request?.files
       video   = object?.video
@@ -83,25 +87,32 @@ class Download
       request
         .get(url)
         .parse (res) =>
-          file  = fs.createWriteStream("#{process.cwd()}/#{name}/#{video.title} [#{video.id}].mp4");
+          file_name     = "#{video.title} [#{video.id}].mp4"
+          path_name     = "#{process.cwd()}/#{name}"
+          file_stream   = fs.createWriteStream("#{path_name}/_#{file_name}");
           params        =
             complete    : '='
             incomplete  : ' '
             width       : 20
             total       : parseInt(res.headers['content-length'], 10)
           bar           = new ProgressBar 'Downloading \t: [:bar] :percent :etas', params
-
           res.on 'data', (chunk) =>
             bar.tick(chunk.length)
           res.on 'end',  =>
-            mixin.write 'green', "Downloaded \t: #{video.title} [#{video.id}].mp4"
-            callback null, video
+            fs.rename "#{path_name}/_#{file_name}", "#{path_name}/#{file_name}", (err) ->
+              mixin.write 'green', "Downloaded \t: #{file_name}"
+              callback err, video
 
           #
           # Write Mp4
           #
-          res.pipe(file)
-        .end  (err, result) ->
+          res.pipe(file_stream)
+        .end  (err, result) =>
+          if err
+            @retry++
+            callback 'retry', null
+
+
 
   _updateManifest : (name) ->
     (input, callback) ->
